@@ -48,16 +48,11 @@ D1$Notes <- gsub("<U+00A0><U+00A0><U+00A0>", "" , D1$Notes)
 #Merge the weeks data with your notes data so that each line has a week attributed to it 
 
 week_list <- read_csv("week-list.csv") 
-
 D1 <- merge(D1, week_list, by.x = "Title", by.y = "Title", all.x = TRUE)
 
-
 #Also remove readings not belonging to the class (IE - that are NA for week)
-
 D1 <- D1 %>%
   drop_na(week) 
-
-
 
 ```
 
