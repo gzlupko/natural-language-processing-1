@@ -23,10 +23,14 @@ Sys.setlocale("LC_ALL", "C")
 library(tidyverse)
 
 #Create a list of all the files, then loop over file list importing them and binding them together
-D1 <- list.files(path = "/YOUR FILE PATH/class-notes/",
+
+getwd()
+
+D1 <- list.files(path = "/Users/gianzlupko/Desktop/HUDK 4051 Learning Analytics/Assn2 - NLP/natural-language-processing/class-notes",
                pattern = "*.csv", 
                full.names = T) %>% 
     map_df(~read_csv(., col_types = cols(.default = "c"))) 
+
   
 ```
 
