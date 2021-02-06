@@ -83,8 +83,7 @@ tdm.corpus <- TermDocumentMatrix(corpus)
 
 What processing steps have you conducted here? Why is this important? Are there any other steps you should take to process your text before analyzing?
 
-Functions from the tm library were called to remove text data that is not needed for topic modeling. Specifically, stop words, punctuation, and numbers were removed. In addition, words were convereted to their stems to ensure that future queries of words converted to their shared stem are made easier to retrive.   
-
+Functions from the tm library were called to remove text data that is not needed for topic modeling. Specifically, stop words, punctuation, and numbers were removed. In addition, words were convereted to their stems to ensure that future queries of word stems are more inclusive than if the words were left un-stemmed. 
 
 
 ## Step 3 - Find common words
@@ -130,6 +129,19 @@ D1$score <- D1$positive - D1$negative
 ## Using ggplot Generate a visualization of the mean sentiment score over weeks, remove rows that have readings from other classes (NA for weeks). You will need to summarize your data to achieve this.
 ```{r}
 
+tidy_D1 <- D1 %>%
+  drop_na(Notes) 
+
+tidy_D1 %>%
+  count(week) 
+
+tidy_D1 %>%
+  group_by(week) %>%
+  summarize(avg_score = mean(score)) %>%
+  ggplot(aes(x = week, y = avg_score)) + geom_bar(stat = "identity") + 
+  ylab("Mean Sentiment Score") + xlab("Week") + ggtitle("Mean Sentiment Score Per Week")
+
+
 ```
 
 # LDA Topic Modelling
@@ -169,4 +181,11 @@ What does an LDA topic represent?
 # Final Task 
 
 Find a set of documents, perhaps essays you have written or articles you have available and complete an LDA analysis of those documents. Does the method group documents as you would expect?
+
+```{r}
+
+
+
+
+```
 
