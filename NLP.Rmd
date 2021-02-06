@@ -83,6 +83,10 @@ tdm.corpus <- TermDocumentMatrix(corpus)
 
 What processing steps have you conducted here? Why is this important? Are there any other steps you should take to process your text before analyzing?
 
+Functions from the tm library were called to remove text data that is not needed for topic modeling. Specifically, stop words, punctuation, and numbers were removed. In addition, words were convereted to their stems to ensure that future queries of words converted to their shared stem are made easier to retrive.   
+
+
+
 ## Step 3 - Find common words
 ```{r}
 #The tm package can do some simple analysis, like find the most common words
@@ -91,6 +95,7 @@ findFreqTerms(tdm.corpus, lowfreq=500, highfreq=Inf)
 word.count <- sort(rowSums(as.matrix(tdm.corpus)), decreasing=TRUE)
 word.count <- data.frame(word.count)
 #Look at the word.count dataframe
+View(word.count)
 ```
 
 ## Generate a Word Cloud
