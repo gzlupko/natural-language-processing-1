@@ -259,9 +259,37 @@ word.count.articles <- data.frame(word.count.articles)
 
 ```
 
-
+LDA topic modeling for research articles 
 
 ```{r}
+
+# create term frequency matrix for research articles 
+dtm.tfi_articles <- DocumentTermMatrix(articles_corpus,control = list(weighting = weightTf)) 
+
+
+# generate LDA with 5 topics 
+
+lda_model_articles <- LDA(dtm.tfi_articles, k = 5, seed = 81) 
+
+# view most common terms in each topic 
+terms(lda_model_articles, k = 10) 
+
+
+articles_corpus$topics <- topics(lda_model_articles) 
+View(articles_corpus$topics) 
+
+
+
+# create word cloud for research articles 
+
+#Define the colors the cloud will use
+col=brewer.pal(6,"Dark2")
+#Generate cloud, make sure your window is large enough to see it
+wordcloud(articles_corpus, min.freq=500, scale=c(3,1),rot.per = 0.25,
+          random.color=T, max.word=15, random.order=F,colors=col)
+```
+
+
 
 ```
 
