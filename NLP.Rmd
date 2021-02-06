@@ -201,19 +201,67 @@ What does an LDA topic represent?
 
 Find a set of documents, perhaps essays you have written or articles you have available and complete an LDA analysis of those documents. Does the method group documents as you would expect?
 
-```{r, setup} 
+```{r}
 
 library(pdftools)
 
 research_articles <- list.files(pattern = "pdf$") 
 class(research_articles)
 
+# create list object with text data from PDF files 
 articles <-lapply(research_articles, pdf_text)
 
 # remove lecture slides, retain only 4 research articles for analysis 
 articles <- articles[-5]
 length(articles)
 
+
+# show number of pages for each PDF file using length
+lapply(articles, length) 
+
+# begin text cleaning 
+articles <- gsub("<.*?>", "", articles)
+articles <- gsub("nbsp", "" , articles)
+articles <- gsub("nbspnbspnbsp", "" , articles)
+articles <- gsub("<U+00A0><U+00A0><U+00A0>", "" , articles)
+
+
+# create corpus for articles 
+articles_corpus <- VCorpus(VectorSource(articles))
+
+
+#Remove spaces
+articles_corpus <- tm_map(articles_corpus, stripWhitespace)
+#Convert to lower case
+articles_corpus <- tm_map(articles_corpus, tolower)
+#Remove pre-defined stop words ('the', 'a', etc)
+articles_corpus <- tm_map(articles_corpus, removeWords, stopwords('english'))
+#Convert words to stems ("education" = "edu") for analysis, for more info 
+articles_corpus <- tm_map(articles_corpus, stemDocument)
+#Remove numbers
+articles_corpus <- tm_map(articles_corpus, removeNumbers)
+#remove punctuation
+articles_corpus <- tm_map(articles_corpus, removePunctuation)
+#Convert to plain text for mapping by wordcloud package
+articles_corpus <- tm_map(articles_corpus, PlainTextDocument, lazy = TRUE)
+#Convert corpus to a term document matrix - so each word can be analyzed individuallly
+tdm.corpus.articles <- TermDocumentMatrix(articles_corpus)
+
+
+# descriptive statistics for articles corpus 
+
+findFreqTerms(tdm.corpus.articles, lowfreq = 500, highfreq = Inf) 
+
+word.count.articles <- sort(rowSums(as.matrix(tdm.corpus.articles)), decreasing=TRUE)
+
+word.count.articles <- data.frame(word.count.articles)
+
+
 ```
 
+
+
+```{r}
+
+```
 
