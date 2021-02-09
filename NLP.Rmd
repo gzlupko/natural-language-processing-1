@@ -141,10 +141,12 @@ tidy_D1 %>%
 tidy_D1 %>%
   group_by(week) %>%
   summarize(avg_score = mean(score)) %>%
-  ggplot(aes(x = week, y = avg_score)) + geom_bar(stat = "identity") + 
-  ylab("Mean Sentiment Score") + xlab("Week") + ggtitle("Mean Sentiment Score Per Week")
+  ggplot(aes(x = week, y = avg_score)) + geom_bar(stat = "identity") +
+  ylab("Mean Sentiment Score") + xlab("Week") + ggtitle("Mean Sentiment Score Per Week") + scale_fill_brewer(palette = "Dark2") 
 
 
+
+# Regression analysis
 sentiment_mod <- lm(score ~ week, data = tidy_D1) 
 summary(sentiment_mod) 
 
@@ -169,17 +171,22 @@ dtm.tfi <- dtm.tfi[,dtm.tfi$v >= 0.1]
 rowTotals <- apply(dtm.tfi , 1, sum) #Find the sum of words in each Document
 dtm.tfi2   <- dtm.tfi[rowTotals> 0, ] #Divide by sum across rows
 
+
 #Identify rows with zero entries
+
+which(rowTotals %in% c(0))
+
 no_notes <- which(rowTotals %in% c(0))
 
 #Remove these rows from original dataset
 #D1 <- D1[-c(?,?),]
 
-D1 <- D1[-c(no_notes), ]
+D1_filtered <- D1[-no_notes, ]
+
+dim(D1_filtered)
+
 
 #Generate LDA model, k is the number of topics and the seed is a random number to start the process
-# below code using dtm.tfi threw an error re: non-zero entries; I ran LDA with dtm.tfi2 since it filtered out rows with non-zero entries 
-lda.model = LDA(dtm.tfi, k = 5, seed = 150)
 
 lda.model = LDA(dtm.tfi2, k = 5, seed = 150)
 
@@ -188,7 +195,8 @@ terms(lda.model, k = 10)
 
 #Identify which documents belong to which topics based on the notes taken by the student
 
-D1$topic <- topics(lda.model)
+D1_filtered$topic<- topics(lda.model)
+
 
 length(topics(lda.model))
 length(D1$Notes) 
@@ -200,6 +208,7 @@ What does an LDA topic represent?
 # Final Task 
 
 Find a set of documents, perhaps essays you have written or articles you have available and complete an LDA analysis of those documents. Does the method group documents as you would expect?
+
 
 ```{r}
 
@@ -244,17 +253,13 @@ articles_corpus <- tm_map(articles_corpus, removeNumbers)
 articles_corpus <- tm_map(articles_corpus, removePunctuation)
 #Convert to plain text for mapping by wordcloud package
 articles_corpus <- tm_map(articles_corpus, PlainTextDocument, lazy = TRUE)
-#Convert corpus to a term document matrix - so each word can be analyzed individuallly
-tdm.corpus.articles <- TermDocumentMatrix(articles_corpus)
+
+# create term frequency matrix for research articles 
+dtm.tfi_articles <- DocumentTermMatrix(articles_corpus,control = list(weighting = weightTf)) 
 
 
-# descriptive statistics for articles corpus 
 
-findFreqTerms(tdm.corpus.articles, lowfreq = 500, highfreq = Inf) 
 
-word.count.articles <- sort(rowSums(as.matrix(tdm.corpus.articles)), decreasing=TRUE)
-
-word.count.articles <- data.frame(word.count.articles)
 
 
 ```
@@ -263,8 +268,6 @@ LDA topic modeling for research articles
 
 ```{r}
 
-# create term frequency matrix for research articles 
-dtm.tfi_articles <- DocumentTermMatrix(articles_corpus,control = list(weighting = weightTf)) 
 
 
 # generate LDA with 5 topics 
@@ -276,8 +279,45 @@ terms(lda_model_articles, k = 10)
 
 
 articles_corpus$topics <- topics(lda_model_articles) 
-View(articles_corpus$topics) 
 
+View(articles_corpus$topics)
+
+
+
+# Run subsequent LDA again with steps to remove non-zero entries
+
+
+#Remove very uncommon terms (term freq inverse document freq < 0.1)
+articles_1 <- dtm.tfi_articles[, dtm.tfi_articles$v >= 0.1]
+
+#Remove non-zero entries
+article_row_sums <- apply(articles_1 , 1, sum) 
+articles_2   <- articles_1[article_row_sums> 0, ] 
+
+
+# Highlight rows with zero entries
+articles_zero_rows<-which(articles_row_sums %in% c(0))
+articles_zero_rows
+
+#Generate LDA model, k is the number of topics and the seed is a random number to start the process
+
+articles_2.model = LDA(articles_2, k = 5, seed = 751)
+
+terms(articles_2.model)
+
+articles$topics <- topics(articles_2.model)
+View(articles$topics)
+
+
+
+
+
+```
+
+
+Research articles corpus EDA 
+
+```{r}
 
 
 # create word cloud for research articles 
@@ -287,7 +327,19 @@ col=brewer.pal(6,"Dark2")
 #Generate cloud, make sure your window is large enough to see it
 wordcloud(articles_corpus, min.freq=500, scale=c(3,1),rot.per = 0.25,
           random.color=T, max.word=15, random.order=F,colors=col)
+
+
+# descriptive statistics for articles corpus 
+
+word.count.articles <- sort(rowSums(as.matrix(tdm.corpus.articles)), decreasing=TRUE)
+
+word.count.articles <- data.frame(word.count.articles)
+head(word.count.articles)
+
 ```
+
+
+
 
 
 
