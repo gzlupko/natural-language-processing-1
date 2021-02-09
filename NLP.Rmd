@@ -205,6 +205,9 @@ length(D1$Notes)
 
 What does an LDA topic represent? 
 
+An LDA topic represents a probability disribution of words found within a given corpus. Each LDA topic is calculated from the combination of multiple probability distributions including the distribution of a word in a document, the distribution of a topic within a document, and the distribution of topics over similar documents. Together, the LDA topic therefore represents a probability distribution of probability distributions. 
+
+
 # Final Task 
 
 Find a set of documents, perhaps essays you have written or articles you have available and complete an LDA analysis of those documents. Does the method group documents as you would expect?
@@ -258,35 +261,21 @@ articles_corpus <- tm_map(articles_corpus, PlainTextDocument, lazy = TRUE)
 dtm.tfi_articles <- DocumentTermMatrix(articles_corpus,control = list(weighting = weightTf)) 
 
 
-
-
-
-
 ```
 
 LDA topic modeling for research articles 
 
 ```{r}
 
-
-
 # generate LDA with 5 topics 
-
 lda_model_articles <- LDA(dtm.tfi_articles, k = 5, seed = 81) 
 
 # view most common terms in each topic 
 terms(lda_model_articles, k = 10) 
 
-
 articles_corpus$topics <- topics(lda_model_articles) 
 
-View(articles_corpus$topics)
-
-
-
 # Run subsequent LDA again with steps to remove non-zero entries
-
-
 #Remove very uncommon terms (term freq inverse document freq < 0.1)
 articles_1 <- dtm.tfi_articles[, dtm.tfi_articles$v >= 0.1]
 
@@ -300,16 +289,12 @@ articles_zero_rows<-which(articles_row_sums %in% c(0))
 articles_zero_rows
 
 #Generate LDA model, k is the number of topics and the seed is a random number to start the process
-
 articles_2.model = LDA(articles_2, k = 5, seed = 751)
-
 terms(articles_2.model)
-
 articles$topics <- topics(articles_2.model)
+
+# view topics 
 View(articles$topics)
-
-
-
 
 
 ```
