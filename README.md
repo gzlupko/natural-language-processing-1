@@ -23,4 +23,6 @@ This project explores three core areas of NLP procedures. First, a set of docume
 
 
 
-![](nlp-visualizations/sentiment-bar.png)
+<img src="nlp-visualizations/sentiment-bar.png" width = 750 > 
+
+
