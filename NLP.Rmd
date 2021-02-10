@@ -202,6 +202,9 @@ An LDA topic represents a probability disribution of words found within a given 
 
 Find a set of documents, perhaps essays you have written or articles you have available and complete an LDA analysis of those documents. Does the method group documents as you would expect?
 
+Somewhat - however a quick glance at the topics is hard to discern the relationship between the words and the topics. This corpus consisted of only four research articles (~100 pages). It would be interesting to run LDA on a similar grouping of articles from within the same area of research but on a larger corpus. Does interpretability of terms and their corresponding topics generally increase when more is fed into the LDA? If so, similar to what personality researchers do for survey item creation, you could have a team of researchers rate the words as similar to the latent variable in which they correspond or not and, from those ratings, caculate an inter-rater reliability. Ostensibly, the greater the inter-rater reliability, the more agreement there would be that the topic corresponds with a shared cognitive or social construct.
+
+
 
 ```{r}
 
