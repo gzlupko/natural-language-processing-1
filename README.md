@@ -8,7 +8,15 @@ The use of natural language processing has exploded over the last decade. Appilc
 * Apply simple sentiment analysis to a set of documents
 * Apply a latent dirichlet allocation to a set of documents
 
-## Tasks for this unit
+## Data 
 
-In this unit you will completing three main tasks. Processing a set of documents, running a sentiment analysis of thise documents and then generating topic models of those documents. The documents we will be using will be student notes that the class HUDK4050 made last semester. As background to this task please read over the follwing materials and watch the methodological videos. If you find any other useful materials please add them under Additional Materials at the end of the this page and pull request the change back to this repo.
+* Week-list.csv ; corpus 1 
+* positive-words.txt ; positive lexicon for sentiment analysis 
+* negative-words.txt ; negative lexicon for sentiment analysis 
+
+
+## Overview
+
+This project explores three core areas of NLP procedures. First, a set of documents is pre-processed for analysis. Next, positively and negatively-valenced lexicons are brought into the environment to run sentiment analysis. Finally, this project uses Latent Dirichlet Allocation (LDA) for topic modeling. 
+
 
