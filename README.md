@@ -21,3 +21,9 @@ This project explores three core areas of NLP procedures. First, a set of docume
 
 
 ![](nlp-visualizations/nlp-word-cloud.png) 
+
+
+
+
+
+![](nlp-visualizations/sentiment-bar.png)
