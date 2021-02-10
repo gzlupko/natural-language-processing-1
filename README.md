@@ -20,3 +20,4 @@ The use of natural language processing has exploded over the last decade. Appilc
 This project explores three core areas of NLP procedures. First, a set of documents is pre-processed for analysis. Next, positively and negatively-valenced lexicons are brought into the environment to run sentiment analysis. Finally, this project uses Latent Dirichlet Allocation (LDA) for topic modeling. 
 
 
+![](nlp-visualizations/nlp-word-cloud.png) 
